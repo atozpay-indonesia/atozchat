@@ -1,0 +1,3 @@
+include ':atozchatlibrary'
+include ':app'
+rootProject.name = "Atoz Chat"
