@@ -28,10 +28,10 @@ Thumbs.db
 # Android Studio stuff
 *.iml
 .idea
-.gradle
+# .gradle
 build/
 captures/
 # gradle/
-gradlew
-gradlew.bat
+# gradlew
+# gradlew.bat
 
