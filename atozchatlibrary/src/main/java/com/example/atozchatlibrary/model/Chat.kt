@@ -4,11 +4,12 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 
 data class Chat(
-    private var senderId: Int? = 0,
-    private var senderName: String? = null,
-    private var recipientId: Int? = 0,
-    private var recipientName: String? = null,
-    private var body: String? = null,
+    val type: Int? = 0,
+    val senderId: Int? = 0,
+    val senderName: String? = null,
+    val recipientId: Int? = 0,
+    val recipientName: String? = null,
+    val body: String? = null,
     @ServerTimestamp
-    private var timeSent: Timestamp? = null
+    val timeSent: Timestamp? = null
 )
