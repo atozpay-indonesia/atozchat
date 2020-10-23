@@ -8,7 +8,16 @@
     android:fitsSystemWindows="true"
     tools:context=".PersonalChatRoomActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_chat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/layout_chat"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
