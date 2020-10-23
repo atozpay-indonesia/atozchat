@@ -5,5 +5,7 @@
     <color name="colorAccent">#ff9651</color>
 
     <color name="transparent">#00FFFFFF</color>
+    <color name="color_bg_outgoing_bubble">#FFFFFF</color>
+    <color name="color_bg_incoming_bubble">@color/colorPrimary</color>
     <color name="background_gray">#f3F3f3</color>
 </resources>
