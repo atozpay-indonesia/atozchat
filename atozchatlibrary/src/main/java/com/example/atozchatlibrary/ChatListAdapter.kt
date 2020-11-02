@@ -1,5 +1,6 @@
 package com.example.atozchatlibrary
 
+import android.opengl.Visibility
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
@@ -71,10 +72,15 @@ class ChatListAdapter(
 
         fun setOutGoingData(chat: Chat) {
             tvChatBody.text = chat.body
-            val calendar1 = Calendar.getInstance()
-            calendar1.timeInMillis = chat.timeSent!!.seconds * 1000L
-            val date = DateFormat.format("HH:mm", calendar1).toString()
-            tvSentTime.text = date
+            if (chat.timeSent != null ) {
+                val calendar1 = Calendar.getInstance()
+                calendar1.timeInMillis = chat.timeSent!!.seconds * 1000L
+                val date = DateFormat.format("HH:mm", calendar1).toString()
+                tvSentTime.visibility = View.VISIBLE
+                tvSentTime.text = date
+            } else {
+                tvSentTime.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -84,10 +90,15 @@ class ChatListAdapter(
 
         fun setIncomingData(chat: Chat) {
             tvChatBody.text = chat.body
-            val calendar1 = Calendar.getInstance()
-            calendar1.timeInMillis = chat.timeSent!!.seconds * 1000L
-            val date = DateFormat.format("HH:mm", calendar1).toString()
-            tvSentTime.text = date
+            if (chat.timeSent != null ) {
+                val calendar1 = Calendar.getInstance()
+                calendar1.timeInMillis = chat.timeSent!!.seconds * 1000L
+                val date = DateFormat.format("HH:mm", calendar1).toString()
+                tvSentTime.visibility = View.VISIBLE
+                tvSentTime.text = date
+            } else {
+                tvSentTime.visibility = View.INVISIBLE
+            }
         }
     }
 }

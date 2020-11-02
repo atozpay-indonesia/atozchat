@@ -8,30 +8,89 @@ public class AtozChat {
     static final String TAG = "AtozChat";
     static final boolean localLOGV = false;
 
-    /**
-     * Intent Extra for first user id. Used in {@link #openPrivateRoom(Context, String, String)}
-     */
-    public static final String INTENT_NAME_FIRST_USER_ID = "FIRST_USER_ID";
+    static AtozChat atozChat;
+    Context mContext;
+
+    String personalRoomName;
+    String personalSenderUserId;
+    String personalSenderUserName;
+    String personalRecipientUserId;
+    String personalRecipientUserName;
 
     /**
-     * Intent Extra for second user id. Used in {@link #openPrivateRoom(Context, String, String)}
+     * Intent Extra for personal room name
      */
-    public static final String INTENT_NAME_SECOND_USER_ID = "SECOND_USER_ID";
+    public static final String INTENT_NAME_PERSONAL_ROOM_NAME = "PERSONAL_ROOM_NAME";
+
+    /**
+     * Intent Extra for sender user id
+     */
+    public static final String INTENT_NAME_SENDER_USER_ID = "SENDER_USER_ID";
+
+    /**
+     * Intent Extra for sender user name
+     */
+    public static final String INTENT_NAME_SENDER_USER_NAME = "SENDER_USER_NAME";
+
+    /**
+     * Intent Extra for recipient user id
+     */
+    public static final String INTENT_NAME_RECIPIENT_USER_ID = "RECIPIENT_USER_ID";
+
+    /**
+     * Intent Extra for recipient user name
+     */
+    public static final String INTENT_NAME_RECIPIENT_USER_NAME = "RECIPIENT_USER_NAME";
+
+    public AtozChat(Context context){
+        mContext = context;
+    }
 
     /**
      * Open private chat room
      *
      * @param context  The context to use.  Usually your {@link android.app.Application}
      *                 or {@link android.app.Activity} object.
-     * @param firstUserId   First user ID. Will be used for constructing chat room name.
-     * @param secondUserId  Second user ID. Will be used for constructing chat room name
      *
      */
-    public static void openPrivateRoom(Context context, String firstUserId, String secondUserId) {
-        if (localLOGV) Log.v(TAG, "openPrivateRoom: initiated");
-        Intent i = new Intent(context, PersonalChatRoomActivity.class);
-        i.putExtra(INTENT_NAME_FIRST_USER_ID, firstUserId);
-        i.putExtra(INTENT_NAME_SECOND_USER_ID, secondUserId);
-        context.startActivity(i);
+    public static AtozChat openPersonalRoom(Context context) {
+        if (localLOGV) Log.v(TAG, "openPersonalRoom: initiated");
+        atozChat = new AtozChat(context);
+        return atozChat;
+    }
+
+    public AtozChat setRoomName(String roomName){
+        personalRoomName = roomName;
+        return atozChat;
+    }
+
+    public AtozChat setSenderUserId(String senderId){
+        personalSenderUserId = senderId;
+        return atozChat;
+    }
+
+    public AtozChat setSenderUserName(String senderName){
+        personalSenderUserName = senderName;
+        return atozChat;
+    }
+
+    public AtozChat setRecipientUserId(String recipientId){
+        personalRecipientUserId = recipientId;
+        return atozChat;
+    }
+
+    public AtozChat setRecipientUserName(String recipientName){
+        personalRecipientUserName = recipientName;
+        return atozChat;
+    }
+
+    public void startChat(){
+        Intent i = new Intent(mContext, PersonalChatRoomActivity.class);
+        i.putExtra(INTENT_NAME_PERSONAL_ROOM_NAME, personalRoomName);
+        i.putExtra(INTENT_NAME_SENDER_USER_ID, personalSenderUserId);
+        i.putExtra(INTENT_NAME_SENDER_USER_NAME, personalSenderUserName);
+        i.putExtra(INTENT_NAME_RECIPIENT_USER_ID, personalRecipientUserId);
+        i.putExtra(INTENT_NAME_RECIPIENT_USER_NAME, personalRecipientUserName);
+        mContext.startActivity(i);
     }
 }
