@@ -1,9 +1,12 @@
 package com.example.atozchatlibrary
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.atozchatlibrary.AtozChat.INTENT_NAME_FIRST_USER_ID
+import com.example.atozchatlibrary.AtozChat.INTENT_NAME_SECOND_USER_ID
 import com.example.atozchatlibrary.R.layout.activity_chat_room_personal
 import com.example.atozchatlibrary.model.Chat
 import com.google.firebase.firestore.DocumentSnapshot
@@ -31,8 +34,14 @@ class PersonalChatRoomActivity : AppCompatActivity() {
     }
 
     private fun setupFirestoreData() {
+        val firstUserId = intent.getStringExtra(INTENT_NAME_FIRST_USER_ID)
+        val secondUserId = intent.getStringExtra(INTENT_NAME_SECOND_USER_ID)
+
+        Toast.makeText(this, "firstUserId: $firstUserId, secondUserId: $secondUserId", Toast.LENGTH_LONG).show()
+
+        val privateRoomName = "chat-$firstUserId-$secondUserId"
         val collectionReference = db.collection("messaging")
-            .document("chat-123-456")
+            .document(privateRoomName)
             .collection("chat")
         collectionReference.orderBy("time_sent", Query.Direction.ASCENDING)
             .addSnapshotListener(EventListener { queryDocumentSnapshots, e ->
