@@ -3,7 +3,7 @@ package com.example.atozchatlibrary;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import com.example.atozchatlibrary.atozpay.PersonalChatRoomActivity;
+import com.example.atozchatlibrary.atozpay.activities.CustomerSupportChatActivity;
 
 public class AtozChat {
     public static final String TAG = "AtozChat";
@@ -86,7 +86,7 @@ public class AtozChat {
     }
 
     public void startChat(){
-        Intent i = new Intent(mContext, PersonalChatRoomActivity.class);
+        Intent i = new Intent(mContext, CustomerSupportChatActivity.class);
         i.putExtra(INTENT_NAME_PERSONAL_ROOM_NAME, personalRoomName);
         i.putExtra(INTENT_NAME_SENDER_USER_ID, personalSenderUserId);
         i.putExtra(INTENT_NAME_SENDER_USER_NAME, personalSenderUserName);

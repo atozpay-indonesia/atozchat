@@ -1,4 +1,4 @@
-package com.example.atozchatlibrary.atozpay
+package com.example.atozchatlibrary.atozpay.recyclerviewadapter
 
 import android.text.format.DateFormat
 import android.view.LayoutInflater

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/LibTheme">
         <activity
-            android:name=".atozpay.PersonalChatRoomActivity"
+            android:name=".atozpay.activities.CustomerSupportChatActivity"
             android:theme="@style/LibTheme"
             android:windowSoftInputMode="adjustResize" />
     </application>
