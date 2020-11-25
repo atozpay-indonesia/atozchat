@@ -1,18 +1,20 @@
 package com.example.atozchatlibrary
 
 import android.os.Bundle
+import android.text.format.DateFormat
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.atozchatlibrary.AtozChat.*
 import com.example.atozchatlibrary.R.layout.activity_chat_room_personal
 import com.example.atozchatlibrary.model.Chat
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_chat_room_personal.*
 import java.util.*
+import kotlin.collections.HashMap
 
 class PersonalChatRoomActivity : AppCompatActivity() {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -20,15 +22,21 @@ class PersonalChatRoomActivity : AppCompatActivity() {
     private val chatList: MutableList<Chat> = ArrayList()
     private val chatListAdapter = ChatListAdapter(chatList)
 
+    private var chatSessionId: String = "chat"
+
     private var chatRoomName: String? = null
     private var senderUserId: String? = null
     private var senderUserName: String? = null
     private var recipientUserId: String? = null
     private var recipientUserName: String? = null
+    private var chatSnippet: String? = null
+
+    private var isNewSession = false;
 
     companion object {
         private const val PERSONAL_CHAT_TYPE_OUTGOING = 1
         private const val PERSONAL_CHAT_TYPE_INCOMING = 2
+        private const val CHAT_SNIPPET_LENGTH = 50
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +51,7 @@ class PersonalChatRoomActivity : AppCompatActivity() {
             )
             adapter = chatListAdapter
         }
-        setupFirestoreData()
+        setupDocumentReference()
 
         button_send.setOnClickListener {
             if (et_chat_message.text.isNotBlank()){
@@ -53,16 +61,43 @@ class PersonalChatRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupFirestoreData() {
+    override fun onResume() {
+        super.onResume()
+        updateUserStatus(true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        updateUserStatus(false)
+    }
+
+    private fun setupDocumentReference() {
         senderUserId = intent.getStringExtra(INTENT_NAME_SENDER_USER_ID)
         senderUserName = intent.getStringExtra(INTENT_NAME_SENDER_USER_NAME)
         recipientUserId = intent.getStringExtra(INTENT_NAME_RECIPIENT_USER_ID)
         recipientUserName = intent.getStringExtra(INTENT_NAME_RECIPIENT_USER_NAME)
-
         chatRoomName = intent.getStringExtra(INTENT_NAME_PERSONAL_ROOM_NAME)
-        val collectionReference = db.collection("messaging")
-            .document(chatRoomName!!)
-            .collection("chat")
+
+        val docRef = db.collection("messaging").document(chatRoomName!!)
+        docRef.get().addOnSuccessListener {document ->
+            if (document.getString("first_user_name") != null){
+                chatSnippet = document.getString("last_chat")
+                updateUserStatus(true)
+                isNewSession = false
+                chatSessionId = generateChatId(document.getTimestamp("session_start_at")!!)
+                setupChatSnapshotListener(docRef)
+            } else {
+                chatSnippet = "-"
+                isNewSession = true
+            }
+        }.addOnFailureListener {
+            chatSnippet = "-"
+        }
+    }
+
+    private fun setupChatSnapshotListener(docRef: DocumentReference) {
+        val collectionReference = docRef
+            .collection(chatSessionId)
         collectionReference.orderBy("time_sent", Query.Direction.ASCENDING)
             .addSnapshotListener(EventListener { queryDocumentSnapshots, e ->
                 if (e != null) {
@@ -114,16 +149,135 @@ class PersonalChatRoomActivity : AppCompatActivity() {
             null
         )
 
-        db.collection("messaging")
-            .document(chatRoomName!!)
-            .collection("chat")
-            .add(chat.toMap()!!)
-            .addOnSuccessListener {
-                // what happen if new chat insertion succeeded
+        chatSnippet = message
+        if (chatSnippet!!.length > CHAT_SNIPPET_LENGTH){
+            chatSnippet = chatSnippet!!.substring(0, CHAT_SNIPPET_LENGTH)
+            chatSnippet = chatSnippet.plus("...")
+        }
+
+        var room: HashMap<String, Any?>? = null
+
+        if (isNewSession){
+            room = hashMapOf(
+                "second_user_id" to recipientUserId,
+                "second_user_name" to recipientUserName,
+                "first_user_id" to senderUserId,
+                "first_user_name" to senderUserName,
+                "session_status" to true,
+                "is_new_chat_available" to true,
+                "last_update" to FieldValue.serverTimestamp(),
+                "last_chat" to chatSnippet,
+                "is_customer_online" to true,
+                "session_start_at" to FieldValue.serverTimestamp(),
+                "session_end_at" to null
+            )
+
+            db.collection("messaging")
+                .document(chatRoomName!!)
+                .set(room)
+                .addOnSuccessListener {
+
+                    // add new chat
+                    addNewChat(chat, true)
+                }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+        } else {
+            room = hashMapOf(
+                "is_new_chat_available" to true,
+                "last_update" to FieldValue.serverTimestamp(),
+                "last_chat" to chatSnippet,
+                "is_customer_online" to true
+            )
+
+            db.collection("messaging")
+                .document(chatRoomName!!)
+                .update(room)
+                .addOnSuccessListener {
+                    addNewChat(chat, false)
+                }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+        }
+
+    }
+
+    private fun addNewChat(chat: Chat, isNew: Boolean) {
+
+        val docRef = db.collection("messaging").document(chatRoomName!!)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                val calendar1 = Calendar.getInstance()
+                calendar1.timeInMillis = document.getTimestamp("session_start_at")!!.seconds * 1000L
+                val date = DateFormat.format("ddMMyyyyHHmmss", calendar1).toString()
+                Log.d(TAG, "session start at: $date")
+
+                chatSessionId = generateChatId(document.getTimestamp("session_start_at")!!)
+
+                val room = hashMapOf(
+                    "current_chats_id" to chatSessionId
+                )
+
+                db.collection("messaging")
+                    .document(chatRoomName!!)
+                    .update(room as Map<String, Any>)
+                    .addOnSuccessListener {
+                        docRef.collection(chatSessionId)
+                            .add(chat.toMap()!!)
+                            .addOnSuccessListener {
+                                // what happen if new chat insertion succeeded
+                                if (isNew){
+                                    isNewSession = false
+                                    setupChatSnapshotListener(docRef)
+                                }
+                            }
+                            .addOnFailureListener {
+                                // what happen if new chat insertion failed
+                            }
+                    }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
             }
             .addOnFailureListener {
-                // what happen if new chat insertion failed
-            }
 
+            }
+    }
+
+    private fun generateChatId(timestamp: Timestamp): String {
+        val calendar1 = Calendar.getInstance()
+        calendar1.timeInMillis = timestamp.seconds * 1000L
+        val date = DateFormat.format("ddMMyyyyHHmmss", calendar1).toString()
+        Log.d(TAG, "session start at: $date")
+
+        return "chat-$date"
+    }
+
+    private fun updateUserStatus(isOnline: Boolean) {
+        val room = hashMapOf(
+            "is_customer_online" to isOnline
+        )
+
+        db.collection("messaging")
+            .document(chatRoomName!!)
+            .update(room as Map<String, Any>)
+            .addOnSuccessListener {
+
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+    }
+
+    private fun initializeNewChatSession(docRef: DocumentReference) {
+        isNewSession = true
+
+        val collectionReference = docRef
+            .collection("chat")
+        collectionReference.orderBy("time_sent", Query.Direction.ASCENDING)
+            .addSnapshotListener(EventListener { queryDocumentSnapshots, e ->
+                if (e != null) {
+                    return@EventListener
+                }
+
+                if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty) {
+                    populateChatList(queryDocumentSnapshots.documents)
+                }
+            })
     }
 }

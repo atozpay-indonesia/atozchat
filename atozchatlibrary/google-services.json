@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "26417205084",
-    "firebase_url": "https://atoz-chat-library.firebaseio.com",
-    "project_id": "atoz-chat-library",
-    "storage_bucket": "atoz-chat-library.appspot.com"
+    "project_number": "569109266151",
+    "firebase_url": "https://atozpay.firebaseio.com",
+    "project_id": "atozpay",
+    "storage_bucket": "atozpay.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:26417205084:android:0c87db00759bb5bf997b99",
+        "mobilesdk_app_id": "1:569109266151:android:0650fd7619c5d39630ac42",
         "android_client_info": {
           "package_name": "com.example.atozchat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "26417205084-kf5ls61gvij781qb1smd0vneo7al1dnd.apps.googleusercontent.com",
+          "client_id": "569109266151-o1t5d8kqld1j11c8e808f219mja3ibp3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCS6HDHZBbYEMPaavC0bXlrBLkkxNkxcoM"
+          "current_key": "AIzaSyAypCR6Iv3xsgvh4XG1uHbeJB8VgV-SMfA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "26417205084-kf5ls61gvij781qb1smd0vneo7al1dnd.apps.googleusercontent.com",
+              "client_id": "569109266151-o1t5d8kqld1j11c8e808f219mja3ibp3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -37,27 +37,27 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:26417205084:android:c3cf87159df5a398997b99",
+        "mobilesdk_app_id": "1:569109266151:android:07f22c01fd91939430ac42",
         "android_client_info": {
           "package_name": "com.example.atozchatlibrary"
         }
       },
       "oauth_client": [
         {
-          "client_id": "26417205084-kf5ls61gvij781qb1smd0vneo7al1dnd.apps.googleusercontent.com",
+          "client_id": "569109266151-o1t5d8kqld1j11c8e808f219mja3ibp3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCS6HDHZBbYEMPaavC0bXlrBLkkxNkxcoM"
+          "current_key": "AIzaSyAypCR6Iv3xsgvh4XG1uHbeJB8VgV-SMfA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "26417205084-kf5ls61gvij781qb1smd0vneo7al1dnd.apps.googleusercontent.com",
+              "client_id": "569109266151-o1t5d8kqld1j11c8e808f219mja3ibp3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
