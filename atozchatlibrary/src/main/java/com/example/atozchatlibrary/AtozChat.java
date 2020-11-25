@@ -3,6 +3,7 @@ package com.example.atozchatlibrary;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import com.example.atozchatlibrary.atozpay.PersonalChatRoomActivity;
 
 public class AtozChat {
     static final String TAG = "AtozChat";

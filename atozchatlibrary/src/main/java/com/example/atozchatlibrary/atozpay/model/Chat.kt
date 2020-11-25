@@ -1,4 +1,4 @@
-package com.example.atozchatlibrary.model
+package com.example.atozchatlibrary.atozpay.model
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude

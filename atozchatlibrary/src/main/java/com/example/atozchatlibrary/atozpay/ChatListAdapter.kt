@@ -1,12 +1,12 @@
-package com.example.atozchatlibrary
+package com.example.atozchatlibrary.atozpay
 
-import android.opengl.Visibility
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.atozchatlibrary.model.Chat
+import com.example.atozchatlibrary.R
+import com.example.atozchatlibrary.atozpay.model.Chat
 import kotlinx.android.synthetic.main.item_list_chat_incoming.view.*
 import kotlinx.android.synthetic.main.item_list_chat_outgoing.view.*
 import java.util.*

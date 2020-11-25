@@ -1,4 +1,4 @@
-package com.example.atozchatlibrary
+package com.example.atozchatlibrary.atozpay
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.atozchatlibrary.AtozChat.*
 import com.example.atozchatlibrary.R.layout.activity_chat_room_personal
-import com.example.atozchatlibrary.model.Chat
+import com.example.atozchatlibrary.atozpay.model.Chat
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener

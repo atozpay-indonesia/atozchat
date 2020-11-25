@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray"
     android:fitsSystemWindows="true"
-    tools:context=".PersonalChatRoomActivity">
+    tools:context=".atozpay.PersonalChatRoomActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_chat"
