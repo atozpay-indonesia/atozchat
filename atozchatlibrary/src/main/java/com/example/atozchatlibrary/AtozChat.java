@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.atozchatlibrary.atozpay.PersonalChatRoomActivity;
 
 public class AtozChat {
-    static final String TAG = "AtozChat";
+    public static final String TAG = "AtozChat";
     static final boolean localLOGV = false;
 
     static AtozChat atozChat;
