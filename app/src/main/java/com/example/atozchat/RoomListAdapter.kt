@@ -20,7 +20,7 @@ class RoomListAdapter(private val roomList: List<ChatRoom>, private val context:
             tvRoomName.text = room.roomName
 
             parentLayout.setOnClickListener {
-                AtozChat.openPersonalRoom(context)
+                AtozChat.initChatAtozpay(context)
                     .setRoomName(room.roomName)
                     .setSenderUserId(room.senderId)
                     .setSenderUserName(room.senderName)

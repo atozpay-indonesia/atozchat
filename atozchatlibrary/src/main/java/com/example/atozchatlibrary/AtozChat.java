@@ -48,17 +48,19 @@ public class AtozChat {
     }
 
     /**
-     * Open private chat room
+     * Open atozpay (chat with Customer Support) chat room
      *
      * @param context  The context to use.  Usually your {@link android.app.Application}
      *                 or {@link android.app.Activity} object.
      *
      */
-    public static AtozChat openPersonalRoom(Context context) {
-        if (localLOGV) Log.v(TAG, "openPersonalRoom: initiated");
+    public static AtozChat initChatAtozpay(Context context) {
+        if (localLOGV) Log.v(TAG, "initChatAtozpay: initiated");
         atozChat = new AtozChat(context);
         return atozChat;
     }
+
+
 
     public AtozChat setRoomName(String roomName){
         personalRoomName = roomName;
