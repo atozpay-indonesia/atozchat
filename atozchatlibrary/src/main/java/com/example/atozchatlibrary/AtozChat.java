@@ -30,16 +30,6 @@ public class AtozChat {
      */
     public static final String INTENT_NAME_SENDER_USER_NAME = "SENDER_USER_NAME";
 
-    /**
-     * Intent Extra for recipient user id
-     */
-    public static final String INTENT_NAME_RECIPIENT_USER_ID = "RECIPIENT_USER_ID";
-
-    /**
-     * Intent Extra for recipient user name
-     */
-    public static final String INTENT_NAME_RECIPIENT_USER_NAME = "RECIPIENT_USER_NAME";
-
     public AtozChat(Context context){
         mContext = context;
     }

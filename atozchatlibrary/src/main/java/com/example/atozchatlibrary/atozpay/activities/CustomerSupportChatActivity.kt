@@ -11,8 +11,6 @@ import com.example.atozchatlibrary.R.layout.activity_chat_room_personal
 import com.example.atozchatlibrary.atozpay.model.Chat
 import com.example.atozchatlibrary.atozpay.recyclerviewadapter.ChatListAdapter
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_CHAT_BODY
-import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_RECIPIENT_ID
-import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_RECIPIENT_NAME
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_SENDER_ID
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_SENDER_NAME
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_TIME_SENT
@@ -55,8 +53,6 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
     private var senderUserId: String? = null
     private var senderUserName: String? = null
-    private var recipientUserId: String? = ""
-    private var recipientUserName: String? = ""
     private var chatSnippet: String? = null
 
     private var isNewSession = false
@@ -177,8 +173,6 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                 chatType,
                 documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_ID),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_NAME),
-                documents[i].getString(CHAT_DOC_FIELD_NAME_RECIPIENT_ID),
-                documents[i].getString(CHAT_DOC_FIELD_NAME_RECIPIENT_NAME),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_CHAT_BODY),
                 documents[i].getTimestamp(CHAT_DOC_FIELD_NAME_TIME_SENT)
             )
@@ -188,15 +182,11 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(message: String){
-        if (recipientUserName == null){
-            recipientUserName = ""
-        }
+
         val chat = Chat(
             null,
             senderUserId,
             senderUserName,
-            recipientUserId,
-            recipientUserName,
             message,
             null
         )

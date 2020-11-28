@@ -16,8 +16,6 @@ data class Chat(
 
     val senderId: String? = null,
     val senderName: String? = null,
-    val recipientId: String? = null,
-    val recipientName: String? = null,
     val body: String? = null,
     @ServerTimestamp
     val timeSent: Timestamp? = null
@@ -25,9 +23,7 @@ data class Chat(
     @Exclude
     fun toMap(): Map<String, Any>? {
         val result = HashMap<String, Any>()
-        result["chat_body"] = body!!
-        result["recipient_id"] = recipientId!!
-        result["recipient_name"] = recipientName!!
+        result["body"] = body!!
         result["sender_id"] = senderId!!
         result["sender_name"] = senderName!!
         result["time_sent"] = FieldValue.serverTimestamp()
