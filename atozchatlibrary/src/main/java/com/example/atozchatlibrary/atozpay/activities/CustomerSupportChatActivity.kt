@@ -48,10 +48,15 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     private var chatSessionId: String = "chat"
 
     private var chatRoomName: String? = null
+    private var firstUserId: String? = null
+    private var firstUserName: String? = null
+    private var secondUserId: String? = null
+    private var secondUserName: String? = null
+
     private var senderUserId: String? = null
     private var senderUserName: String? = null
-    private var recipientUserId: String? = null
-    private var recipientUserName: String? = null
+    private var recipientUserId: String? = ""
+    private var recipientUserName: String? = ""
     private var chatSnippet: String? = null
 
     private var isNewSession = false
@@ -91,20 +96,31 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     private fun setupDocumentReference() {
         senderUserId = intent.getStringExtra(INTENT_NAME_SENDER_USER_ID)
         senderUserName = intent.getStringExtra(INTENT_NAME_SENDER_USER_NAME)
-        recipientUserId = intent.getStringExtra(INTENT_NAME_RECIPIENT_USER_ID)
-        recipientUserName = intent.getStringExtra(INTENT_NAME_RECIPIENT_USER_NAME)
-        chatRoomName = intent.getStringExtra(INTENT_NAME_PERSONAL_ROOM_NAME)
+        firstUserId = senderUserId
+        firstUserName = senderUserName
+        chatRoomName = "$senderUserId"
 
         val docRef = db.collection(COLLECTION_ROOT).document(chatRoomName!!)
         docRef.get().addOnSuccessListener {document ->
             if (document.getString(ROOM_DOC_FIELD_NAME_FIRST_USER_NAME) != null){
+                // resuming session
                 chatSnippet = document.getString(ROOM_DOC_FIELD_NAME_LAST_CHAT)
                 updateUserStatus(true)
                 isNewSession = false
                 chatSessionId = generateChatId(document.getTimestamp(
                     ROOM_DOC_FIELD_NAME_SESSION_START_AT)!!)
+
+                //update recipient user id and name (if not null)
+                if (document.getString(ROOM_DOC_FIELD_NAME_SECOND_USER_ID) != null){
+                    secondUserId = document.getString(ROOM_DOC_FIELD_NAME_SECOND_USER_ID)
+                    secondUserName = document.getString(ROOM_DOC_FIELD_NAME_SECOND_USER_NAME)
+                } else {
+                    // start room field listener
+                    setupRoomDocListener(docRef)
+                }
                 setupChatSnapshotListener(docRef)
             } else {
+                // will start a new session
                 chatSnippet = "-"
                 isNewSession = true
             }
@@ -128,15 +144,30 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             })
     }
 
+    private fun setupRoomDocListener(docRef: DocumentReference){
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Log.d(TAG, "Current data: ${snapshot.data}")
+            } else {
+                Log.d(TAG, "Current data: null")
+            }
+        }
+    }
+
     private fun populateChatList(documents: List<DocumentSnapshot>) {
         chatList.clear()
         for (i in documents.indices) {
             // check if sender id match current user id
             // to identify chat type (outgoing or incoming)
             var chatType: Int
-            val senderId = documents[i].getLong(CHAT_DOC_FIELD_NAME_SENDER_ID)?.toInt()
-            val currentUserIdInt = senderUserId!!.toInt()
-            chatType = if (senderId == currentUserIdInt) {
+            val senderId = documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_ID)
+            val currentUserId = senderUserId
+            chatType = if (senderId.equals(currentUserId)) {
                 PERSONAL_CHAT_TYPE_OUTGOING
             } else {
                 PERSONAL_CHAT_TYPE_INCOMING
@@ -144,9 +175,9 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
             val chat = Chat(
                 chatType,
-                documents[i].getLong(CHAT_DOC_FIELD_NAME_SENDER_ID)?.toInt(),
+                documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_ID),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_NAME),
-                documents[i].getLong(CHAT_DOC_FIELD_NAME_RECIPIENT_ID)?.toInt(),
+                documents[i].getString(CHAT_DOC_FIELD_NAME_RECIPIENT_ID),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_RECIPIENT_NAME),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_CHAT_BODY),
                 documents[i].getTimestamp(CHAT_DOC_FIELD_NAME_TIME_SENT)
@@ -157,11 +188,14 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(message: String){
+        if (recipientUserName == null){
+            recipientUserName = ""
+        }
         val chat = Chat(
             null,
-            senderUserId!!.toInt(),
+            senderUserId,
             senderUserName,
-            recipientUserId!!.toInt(),
+            recipientUserId,
             recipientUserName,
             message,
             null
@@ -177,10 +211,10 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
         if (isNewSession){
             room = hashMapOf(
-                ROOM_DOC_FIELD_NAME_SECOND_USER_ID to recipientUserId,
-                ROOM_DOC_FIELD_NAME_SECOND_USER_NAME to recipientUserName,
-                ROOM_DOC_FIELD_NAME_FIRST_USER_ID to senderUserId,
-                ROOM_DOC_FIELD_NAME_FIRST_USER_NAME to senderUserName,
+                ROOM_DOC_FIELD_NAME_SECOND_USER_ID to secondUserId,
+                ROOM_DOC_FIELD_NAME_SECOND_USER_NAME to secondUserName,
+                ROOM_DOC_FIELD_NAME_FIRST_USER_ID to firstUserId,
+                ROOM_DOC_FIELD_NAME_FIRST_USER_NAME to firstUserName,
                 ROOM_DOC_FIELD_NAME_SESSION_STATUS to true,
                 ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE to true,
                 ROOM_DOC_FIELD_NAME_LAST_UPDATE to FieldValue.serverTimestamp(),

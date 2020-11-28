@@ -14,9 +14,9 @@ data class Chat(
      */
     val type: Int? = 0,
 
-    val senderId: Int? = 0,
+    val senderId: String? = null,
     val senderName: String? = null,
-    val recipientId: Int? = 0,
+    val recipientId: String? = null,
     val recipientName: String? = null,
     val body: String? = null,
     @ServerTimestamp

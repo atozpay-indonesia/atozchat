@@ -12,11 +12,8 @@ public class AtozChat {
     static AtozChat atozChat;
     Context mContext;
 
-    String personalRoomName;
     String personalSenderUserId;
     String personalSenderUserName;
-    String personalRecipientUserId;
-    String personalRecipientUserName;
 
     /**
      * Intent Extra for personal room name
@@ -61,12 +58,6 @@ public class AtozChat {
     }
 
 
-
-    public AtozChat setRoomName(String roomName){
-        personalRoomName = roomName;
-        return atozChat;
-    }
-
     public AtozChat setSenderUserId(String senderId){
         personalSenderUserId = senderId;
         return atozChat;
@@ -77,23 +68,10 @@ public class AtozChat {
         return atozChat;
     }
 
-    public AtozChat setRecipientUserId(String recipientId){
-        personalRecipientUserId = recipientId;
-        return atozChat;
-    }
-
-    public AtozChat setRecipientUserName(String recipientName){
-        personalRecipientUserName = recipientName;
-        return atozChat;
-    }
-
     public void startChat(){
         Intent i = new Intent(mContext, CustomerSupportChatActivity.class);
-        i.putExtra(INTENT_NAME_PERSONAL_ROOM_NAME, personalRoomName);
         i.putExtra(INTENT_NAME_SENDER_USER_ID, personalSenderUserId);
         i.putExtra(INTENT_NAME_SENDER_USER_NAME, personalSenderUserName);
-        i.putExtra(INTENT_NAME_RECIPIENT_USER_ID, personalRecipientUserId);
-        i.putExtra(INTENT_NAME_RECIPIENT_USER_NAME, personalRecipientUserName);
         mContext.startActivity(i);
     }
 }

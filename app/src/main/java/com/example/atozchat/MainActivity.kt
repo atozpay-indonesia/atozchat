@@ -28,9 +28,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveDummyList() {
-        val csId = 456
-        val csName = "Customer Service 01"
-
         val userId1 = 8232
         val userName1 = "Muhammad Abdi Alidrus"
         val userId2 = 7673
@@ -49,67 +46,43 @@ class MainActivity : AppCompatActivity() {
         val userName8 = "Ronny Ramdhani"
 
         val chatRoom1 = ChatRoom(
-            "chat-$userId1-$csId",
-            "$userId1",
-            userName1,
-            "$csId",
-            "$csName"
+            userId1,
+            userName1
         )
 
         val chatRoom2 = ChatRoom(
-            "chat-$userId2-$csId",
-            "$userId2",
-            userName2,
-            "$csId",
-            csName
+            userId2,
+            userName2
         )
 
         val chatRoom3 = ChatRoom(
-            "chat-$userId3-$csId",
-            "$userId3",
-            userName3,
-            "$csId",
-            csName
+            userId3,
+            userName3
         )
 
         val chatRoom4 = ChatRoom(
-            "chat-$userId4-$csId",
-            "$userId4",
-            userName4,
-            "$csId",
-            csName
+            userId4,
+            userName4
         )
 
         val chatRoom5 = ChatRoom(
-            "chat-$userId5-$csId",
-            "$userId5",
-            userName5,
-            "$csId",
-            csName
+            userId5,
+            userName5
         )
 
         val chatRoom6 = ChatRoom(
-            "chat-$userId6-$csId",
-            "$userId6",
-            userName6,
-            "$csId",
-            csName
+            userId6,
+            userName6
         )
 
         val chatRoom7 = ChatRoom(
-            "chat-$userId7-$csId",
-            "$userId7",
-            userName7,
-            "$csId",
-            csName
+            userId7,
+            userName7
         )
 
         val chatRoom8 = ChatRoom(
-            "chat-$userId8-$csId",
-            "$userId8",
-            userName8,
-            "$csId",
-            csName
+            userId8,
+            userName8
         )
 
         chatRoom1.save()

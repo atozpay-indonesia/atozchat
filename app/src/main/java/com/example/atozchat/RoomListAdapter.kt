@@ -12,20 +12,15 @@ class RoomListAdapter(private val roomList: List<ChatRoom>, private val context:
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val tvUserName = view.tv_user_name
-        private val tvRoomName = view.tv_room_name
         private val parentLayout = view.parent_layout
 
         fun bindRoom(room: ChatRoom, context: Context) {
             tvUserName.text = room.senderName
-            tvRoomName.text = room.roomName
 
             parentLayout.setOnClickListener {
                 AtozChat.initChatAtozpay(context)
-                    .setRoomName(room.roomName)
-                    .setSenderUserId(room.senderId)
+                    .setSenderUserId(room.senderId!!.toString())
                     .setSenderUserName(room.senderName)
-                    .setRecipientUserId(room.recipientId)
-                    .setRecipientUserName(room.recipientName)
                     .startChat()
             }
         }
