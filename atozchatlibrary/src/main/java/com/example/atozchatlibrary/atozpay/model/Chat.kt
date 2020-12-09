@@ -21,7 +21,7 @@ data class Chat(
     val timeSent: Timestamp? = null
 ) {
     @Exclude
-    fun toMap(): Map<String, Any>? {
+    fun toMap(): Map<String, Any> {
         val result = HashMap<String, Any>()
         result["body"] = body!!
         result["sender_id"] = senderId!!

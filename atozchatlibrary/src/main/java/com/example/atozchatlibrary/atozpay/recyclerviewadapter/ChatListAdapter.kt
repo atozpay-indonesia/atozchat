@@ -74,7 +74,7 @@ class ChatListAdapter(
             tvChatBody.text = chat.body
             if (chat.timeSent != null ) {
                 val calendar1 = Calendar.getInstance()
-                calendar1.timeInMillis = chat.timeSent!!.seconds * 1000L
+                calendar1.timeInMillis = chat.timeSent.seconds * 1000L
                 val date = DateFormat.format("HH:mm", calendar1).toString()
                 tvSentTime.visibility = View.VISIBLE
                 tvSentTime.text = date
@@ -92,7 +92,7 @@ class ChatListAdapter(
             tvChatBody.text = chat.body
             if (chat.timeSent != null ) {
                 val calendar1 = Calendar.getInstance()
-                calendar1.timeInMillis = chat.timeSent!!.seconds * 1000L
+                calendar1.timeInMillis = chat.timeSent.seconds * 1000L
                 val date = DateFormat.format("HH:mm", calendar1).toString()
                 tvSentTime.visibility = View.VISIBLE
                 tvSentTime.text = date
