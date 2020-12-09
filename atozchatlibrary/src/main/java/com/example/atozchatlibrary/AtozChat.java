@@ -1,5 +1,6 @@
 package com.example.atozchatlibrary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -9,16 +10,12 @@ public class AtozChat {
     public static final String TAG = "AtozChat";
     static final boolean localLOGV = false;
 
+    @SuppressLint("StaticFieldLeak")
     static AtozChat atozChat;
     Context mContext;
 
     String personalSenderUserId;
     String personalSenderUserName;
-
-    /**
-     * Intent Extra for personal room name
-     */
-    public static final String INTENT_NAME_PERSONAL_ROOM_NAME = "PERSONAL_ROOM_NAME";
 
     /**
      * Intent Extra for sender user id
