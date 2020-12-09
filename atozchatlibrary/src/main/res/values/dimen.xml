@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="margin_sss">1dp</dimen>
+    <dimen name="margin_ss">2dp</dimen>
+    <dimen name="margin_ss_">-2dp</dimen>
+    <dimen name="margin_s">4dp</dimen>
+    <dimen name="margin_s_">-4dp</dimen>
+    <dimen name="margin_sm">6dp</dimen>
+    <dimen name="margin_m">8dp</dimen>
+    <dimen name="margin_m_">-8dp</dimen>
+    <dimen name="margin_l">12dp</dimen>
+    <dimen name="margin_xl">16dp</dimen>
+    <dimen name="margin_xxl">24dp</dimen>
+    <dimen name="margin_xxxl">30dp</dimen>
+    <dimen name="margin_xxxll">40dp</dimen>
+    <dimen name="margin_xxxxl">50dp</dimen>
+    <dimen name="margin_xxxxxl">60dp</dimen>
+    <dimen name="margin_xxxxl_">-50dp</dimen>
+
+    <dimen name="text_ssss">6sp</dimen>
+    <dimen name="text_sss">8sp</dimen>
+    <dimen name="text_ss">10sp</dimen>
+    <dimen name="text_ssm">11sp</dimen>
+    <dimen name="text_s">12sp</dimen>
+    <dimen name="text_m">14sp</dimen>
+    <dimen name="text_L">16sp</dimen>
+    <dimen name="text_XL">18sp</dimen>
+    <dimen name="text_XML">20sp</dimen>
+    <dimen name="text_XXL">22sp</dimen>
+    <dimen name="text_XXXL">26sp</dimen>
+    <dimen name="text_XXXXL">32sp</dimen>
+
+    <dimen name="size_icon_sssss">10dp</dimen>
+    <dimen name="size_icon_ssss">15dp</dimen>
+    <dimen name="size_icon_sss2">20dp</dimen>
+    <dimen name="size_icon_sss">25dp</dimen>
+    <dimen name="size_icon_ss">30dp</dimen>
+    <dimen name="size_icon_ss_">-30dp</dimen>
+    <dimen name="size_icon_s">40dp</dimen>
+    <dimen name="size_icon_sms">50dp</dimen>
+    <dimen name="size_icon_sm">60dp</dimen>
+    <dimen name="size_icon_m">75dp</dimen>
+    <dimen name="size_icon_mm">85dp</dimen>
+    <dimen name="size_icon_ml">90dp</dimen>
+    <dimen name="size_icon_l">100dp</dimen>
+    <dimen name="size_icon_xl">125dp</dimen>
+    <dimen name="size_icon_xll">130dp</dimen>
+    <dimen name="size_icon_xxl">150dp</dimen>
+    <dimen name="size_icon_xxlm">180dp</dimen>
+    <dimen name="size_icon_xxll">200dp</dimen>
+    <dimen name="size_icon_xxlll">213dp</dimen>
+    <dimen name="size_icon_xxxl">350dp</dimen>
+    <dimen name="size_icon_xxxll">450dp</dimen>
+    <dimen name="size_height_adv">150dp</dimen>
+    <dimen name="size_height_adv_s">175dp</dimen>
+    <dimen name="size_height_adv_m">185dp</dimen>
+    <dimen name="size_height_adv_l">200dp</dimen>
+    <dimen name="size_height_adv2">250dp</dimen>
+    <dimen name="size_height_adv3">400dp</dimen>
+    <dimen name="size_indicator_page">40dp</dimen>
+
+</resources>

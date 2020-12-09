@@ -5,11 +5,18 @@
     <color name="colorAccent">#ff9651</color>
 
     <color name="transparent">#00FFFFFF</color>
-    <color name="color_bg_outgoing_bubble">@color/colorPrimary</color>
-    <color name="color_bg_incoming_bubble">#FFFFFF</color>
+    <color name="color_bg_outgoing_bubble">#f2f2f2</color>
+    <color name="color_bg_incoming_bubble">@color/colorPrimaryDark</color>
     <color name="color_bg_chat_user_photo">#FFFFFF</color>
-    <color name="background_gray">#f3F3f3</color>
+    <color name="background_gray">#f2F2f2</color>
+    <color name="background_white">#ffffff</color>
 
-    <color name="color_chat_body_incoming">#000000</color>
-    <color name="color_chat_body_outgoing">#FFFFFF</color>
+    <color name="color_chat_body_incoming">#FFFFFF</color>
+    <color name="color_chat_body_outgoing">#000000</color>
+
+    <color name="text_color_black">#000000</color>
+    <color name="text_color_white">#ffffff</color>
+    <color name="text_color_chat_outgoing">#939393</color>
+    <color name="text_color_chat_incoming">#f2f2f2</color>
+
 </resources>

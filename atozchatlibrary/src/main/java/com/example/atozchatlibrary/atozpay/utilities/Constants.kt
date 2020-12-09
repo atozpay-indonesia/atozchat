@@ -6,8 +6,8 @@ class Constants {
         const val PERSONAL_CHAT_TYPE_OUTGOING = 1
         const val PERSONAL_CHAT_TYPE_INCOMING = 2
         const val CHAT_SNIPPET_LENGTH = 50
-        const val COLLECTION_ROOT = "messaging"
-        const val ROOM_DOC_FIELD_NAME_CURRENT_CHATS_ID = "current_chats_id"
+        const val COLLECTION_ROOT_CHAT = "messaging"
+        const val COLLECTION_ROOT_CS = "customer_support_crew"
         const val ROOM_DOC_FIELD_NAME_FIRST_USER_ID = "first_user_id"
         const val ROOM_DOC_FIELD_NAME_FIRST_USER_NAME = "first_user_name"
         const val ROOM_DOC_FIELD_NAME_SECOND_USER_ID = "second_user_id"
