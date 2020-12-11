@@ -5,8 +5,8 @@
     <color name="colorAccent">#ff9651</color>
 
     <color name="transparent">#00FFFFFF</color>
-    <color name="color_bg_outgoing_bubble">#f2f2f2</color>
-    <color name="color_bg_incoming_bubble">@color/colorPrimaryDark</color>
+    <color name="color_bg_outgoing_bubble">#dcdcdc</color>
+    <color name="color_bg_incoming_bubble">@color/colorAccent</color>
     <color name="color_bg_chat_user_photo">#FFFFFF</color>
     <color name="background_gray">#f2F2f2</color>
     <color name="background_white">#ffffff</color>

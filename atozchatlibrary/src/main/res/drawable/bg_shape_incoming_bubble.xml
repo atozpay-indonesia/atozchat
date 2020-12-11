@@ -13,13 +13,13 @@
 <!--    </item>-->
     <item>
         <shape android:shape="rectangle" >
-<!--            <solid android:color="@color/color_bg_incoming_bubble" />-->
-            <corners android:radius="4dp" />
-            <gradient
-                android:angle="180"
-                android:startColor="#ff5e62"
-                android:endColor="#ff9966"
-                android:type="linear" />
+            <solid android:color="@color/color_bg_incoming_bubble" />
+            <corners android:radius="10dp" />
+<!--            <gradient-->
+<!--                android:angle="180"-->
+<!--                android:startColor="#ff5e62"-->
+<!--                android:endColor="#ff9966"-->
+<!--                android:type="linear" />-->
         </shape>
     </item>
 </layer-list>
