@@ -86,10 +86,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         }
 
         button_send.setOnClickListener {
-            if (et_chat_message.text.isNotBlank()) {
-                sendMessage(et_chat_message.text.toString())
-                et_chat_message.setText("")
-            }
+            proceedSendMessage()
         }
 
         iv_back.setOnClickListener {
@@ -291,6 +288,28 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             )
             chatList.add(chat)
         }
+        chatListAdapter.notifyDataSetChanged()
+        rv_chat.smoothScrollToPosition(chatList.size - 1)
+    }
+
+    private fun proceedSendMessage(){
+        if (et_chat_message.text.isNotBlank()) {
+            val message = et_chat_message.text.toString()
+            et_chat_message.setText("")
+            setNewMessageLocally(message)
+            sendMessage(message)
+        }
+    }
+
+    private fun setNewMessageLocally(message: String) {
+        val chat = Chat(
+            PERSONAL_CHAT_TYPE_OUTGOING,
+            senderUserId,
+            senderUserName,
+            message,
+            null
+        )
+        chatList.add(chat)
         chatListAdapter.notifyDataSetChanged()
         rv_chat.smoothScrollToPosition(chatList.size - 1)
     }

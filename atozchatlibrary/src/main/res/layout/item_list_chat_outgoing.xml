@@ -30,22 +30,44 @@
             android:text="body"
             android:textColor="@color/color_chat_body_outgoing"
             android:textSize="@dimen/text_L"
-            app:layout_constraintBottom_toTopOf="@id/tv_sent_time_outgoing"
+            app:layout_constraintBottom_toTopOf="@id/layout_message_time"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_sent_time_outgoing"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_message_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
-            android:textColor="@color/text_color_chat_outgoing"
-            android:textSize="@dimen/text_s"
-            android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                android:id="@+id/tv_sent_time_outgoing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/text_color_chat_outgoing"
+                android:textSize="@dimen/text_s"
+                android:textStyle="normal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:id="@+id/iv_status_pending"
+                android:layout_width="@dimen/size_icon_ssss"
+                android:layout_height="@dimen/size_icon_ssss"
+                android:visibility="gone"
+                android:src="@drawable/ic_outgoing_message_pending"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

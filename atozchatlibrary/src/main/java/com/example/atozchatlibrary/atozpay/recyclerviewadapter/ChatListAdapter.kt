@@ -69,6 +69,7 @@ class ChatListAdapter(
     class ViewHolderOutGoing(view: View) : RecyclerView.ViewHolder(view) {
         private val tvChatBody = view.tv_chat_body_outgoing
         private val tvSentTime = view.tv_sent_time_outgoing
+        private val tvStatusPending = view.iv_status_pending
 
         fun setOutGoingData(chat: Chat) {
             tvChatBody.text = chat.body
@@ -76,10 +77,12 @@ class ChatListAdapter(
                 val calendar1 = Calendar.getInstance()
                 calendar1.timeInMillis = chat.timeSent.seconds * 1000L
                 val date = DateFormat.format("HH:mm", calendar1).toString()
+                tvStatusPending.visibility = View.GONE
                 tvSentTime.visibility = View.VISIBLE
                 tvSentTime.text = date
             } else {
-                tvSentTime.visibility = View.INVISIBLE
+                tvSentTime.visibility = View.GONE
+                tvStatusPending.visibility = View.VISIBLE
             }
         }
     }
