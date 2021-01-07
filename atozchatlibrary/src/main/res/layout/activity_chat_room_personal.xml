@@ -26,8 +26,8 @@
                 android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_action_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -37,6 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_xl"
+                android:layout_marginLeft="@dimen/margin_xl"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/iv_back"
                 app:layout_constraintTop_toTopOf="parent">
@@ -60,6 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_xl"
+                android:layout_marginLeft="@dimen/margin_xl"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/iv_back"
                 app:layout_constraintTop_toTopOf="parent">
@@ -68,30 +72,66 @@
                     android:id="@+id/layout_cs_data_loading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="@dimen/size_icon_s"
-                        android:layout_height="@dimen/size_icon_s"
-                        android:indeterminateDrawable="@drawable/pb_loading_rotator"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/sfl_cs_loading"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_m"
-                        android:layout_marginEnd="@dimen/margin_m"
-                        android:text="Sedang menghubungkan..."
-                        android:textColor="@color/text_color_white"
-                        android:textSize="@dimen/text_XL"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@id/progressBar"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/iv_cs_avatar_loading"
+                                android:layout_width="@dimen/size_icon_s"
+                                android:layout_height="@dimen/size_icon_s"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/bg_shimmer_item_circle"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:id="@+id/tv_cs_label_loading"
+                                android:layout_width="@dimen/size_icon_xxlm"
+                                android:layout_height="@dimen/size_icon_ssss"
+                                android:layout_marginStart="@dimen/margin_l"
+                                android:layout_marginLeft="@dimen/margin_l"
+                                android:background="@drawable/bg_shimmer_item_rectangle"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintLeft_toRightOf="@id/iv_cs_avatar_loading"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <View
+                                android:id="@+id/tv_cs_name_loading"
+                                android:layout_width="@dimen/size_icon_xxlm"
+                                android:layout_height="@dimen/size_icon_ssss"
+                                android:layout_marginStart="@dimen/margin_l"
+                                android:layout_marginLeft="@dimen/margin_l"
+                                android:layout_marginTop="@dimen/margin_s"
+                                android:background="@drawable/bg_shimmer_item_rectangle"
+                                android:textColor="@color/text_color_white"
+                                android:textSize="@dimen/text_m"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintLeft_toRightOf="@id/iv_cs_avatar_loading"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tv_cs_label_loading" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -156,37 +196,75 @@
         android:id="@+id/layout_body_new_session"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:padding="@dimen/margin_xxl"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/layout_chat"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
         <ImageView
             android:id="@+id/iv_start_new_session"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/size_icon_xxllm"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_xxxxl"
-            android:layout_marginEnd="@dimen/margin_xxxxl"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@drawable/img_start_chat_session"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout_start_session"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_start_new_session"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_start_session"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Kirim pesan untuk memulai sesi chat"
-            android:textSize="@dimen/text_XL"
+            android:background="@drawable/bg_action_button_start_chat_session"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_start_new_session"
-            app:layout_constraintVertical_bias="0.31" />
+            app:layout_constraintTop_toBottomOf="@id/iv_start_new_session">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_action_start_session"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:paddingLeft="@dimen/margin_xxl"
+                android:paddingTop="@dimen/margin_s"
+                android:paddingRight="@dimen/margin_xxl"
+                android:paddingBottom="@dimen/margin_m"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_start_new_session"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_m"
+                    android:gravity="center"
+                    android:text="Mulai percakapan"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="@dimen/text_L"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/iv_start_session"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_start_session"
+                    android:layout_width="@dimen/size_icon_ss"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:src="@drawable/ic_baseline_send_36"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -195,8 +273,8 @@
         android:id="@+id/layout_body_end_session"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:padding="@dimen/margin_xxl"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layout_chat"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
@@ -242,6 +320,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_chat_edittext"
             android:paddingStart="10dp"
@@ -273,6 +352,7 @@
                 android:imeOptions="normal"
                 android:paddingTop="10dp"
                 android:paddingEnd="15dp"
+                android:paddingRight="15dp"
                 android:paddingBottom="10dp"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="parent"

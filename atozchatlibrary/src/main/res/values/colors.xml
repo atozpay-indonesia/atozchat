@@ -6,17 +6,19 @@
 
     <color name="transparent">#00FFFFFF</color>
     <color name="color_bg_outgoing_bubble">#dcdcdc</color>
-    <color name="color_bg_incoming_bubble">@color/colorAccent</color>
+    <color name="color_bg_incoming_bubble">#c55400</color>
     <color name="color_bg_chat_user_photo">#FFFFFF</color>
     <color name="background_gray">#f2F2f2</color>
     <color name="background_white">#ffffff</color>
 
-    <color name="color_chat_body_incoming">#000000</color>
+    <color name="color_chat_body_incoming">@color/text_color_white</color>
     <color name="color_chat_body_outgoing">#000000</color>
 
     <color name="text_color_black">#000000</color>
     <color name="text_color_white">#ffffff</color>
     <color name="text_color_chat_outgoing">#939393</color>
     <color name="text_color_chat_incoming">#2c2c2c</color>
+
+    <color name="shimmer_gray">#f2F2f2</color>
 
 </resources>

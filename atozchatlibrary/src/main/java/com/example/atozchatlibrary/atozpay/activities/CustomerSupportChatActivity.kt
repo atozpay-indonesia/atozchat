@@ -1,7 +1,6 @@
 package com.example.atozchatlibrary.atozpay.activities
 
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,15 +11,20 @@ import com.example.atozchatlibrary.AtozChat.*
 import com.example.atozchatlibrary.R.layout.activity_chat_room_personal
 import com.example.atozchatlibrary.atozpay.model.Chat
 import com.example.atozchatlibrary.atozpay.recyclerviewadapter.ChatListAdapter
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_AUTO_GENERATED
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_CHAT_BODY
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_SENDER_ID
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_SENDER_NAME
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_TIME_SENT
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_SNIPPET_LENGTH
-import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_CHAT
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_ROOM
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_CS
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_OPENING_MESSAGES
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_ROOM_CHAT
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.PERSONAL_CHAT_TYPE_INCOMING
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.PERSONAL_CHAT_TYPE_INCOMING_LOADING
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.PERSONAL_CHAT_TYPE_OUTGOING
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_LAST_CHAT_SENDER_ID
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_FIRST_USER_ID
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_FIRST_USER_NAME
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE
@@ -42,8 +46,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var rootQuery: CollectionReference
     private val chatList: MutableList<Chat> = ArrayList()
-    private val chatListAdapter = ChatListAdapter(chatList)
-    private var chatSessionCollection: String = "chat"
+    private val chatListAdapter = ChatListAdapter(chatList, this)
     private var chatRoomName: String? = null
     private var firstUserId: String? = null
     private var firstUserName: String? = null
@@ -74,7 +77,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         db.firestoreSettings = settings
-        rootQuery = db.collection(COLLECTION_ROOT_CHAT)
+        rootQuery = db.collection(COLLECTION_ROOT_ROOM)
 
         rv_chat.apply {
             layoutManager = LinearLayoutManager(
@@ -92,11 +95,17 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         iv_back.setOnClickListener {
             onBackPressed()
         }
+
+        layout_action_start_session.setOnClickListener {
+            setupNewChatSession()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        showCustomerSupportLoading()
+//        showCustomerSupportLoading()
+        showCustomerSupportNew()
+        showSessionStateNew()
         setupDocumentReference()
     }
 
@@ -130,6 +139,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         rv_chat.visibility = View.GONE
         layout_body_end_session.visibility = View.GONE
         layout_body_new_session.visibility = View.VISIBLE
+        layout_chat.visibility = View.GONE
 
         isNewSession = true
         chatSnippet = "-"
@@ -144,6 +154,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         layout_body_new_session.visibility = View.GONE
         layout_body_end_session.visibility = View.GONE
         rv_chat.visibility = View.VISIBLE
+        layout_chat.visibility = View.VISIBLE
     }
 
     private fun showSessionStateEnd() {
@@ -154,6 +165,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         rv_chat.visibility = View.GONE
         layout_body_new_session.visibility = View.GONE
         layout_body_end_session.visibility = View.VISIBLE
+        layout_chat.visibility = View.GONE
 
         chatSnippet = "-"
         isNewSession = true
@@ -165,6 +177,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     }
 
     private fun showCustomerSupportData(csId: String?) {
+        sfl_cs_loading.stopShimmer()
         db.collection(COLLECTION_ROOT_CS).whereEqualTo("uid", csId)
             .get()
             .addOnSuccessListener { documents ->
@@ -172,6 +185,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                     Log.d(TAG, "${document.id} => ${document.data}")
                     layout_cs_data_loading.visibility = View.GONE
                     layout_cs_data.visibility = View.VISIBLE
+                    layout_state_new_session.visibility = View.GONE
                     tv_cs_name.text = document.getString("alias")
                     Glide.with(this).load(document.getString("img_url")).into(iv_cs_avatar)
                 }
@@ -185,6 +199,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         layout_state_new_session.visibility = View.GONE
         layout_cs_data.visibility = View.GONE
         layout_cs_data_loading.visibility = View.VISIBLE
+        sfl_cs_loading.startShimmer()
     }
 
     private fun showCustomerSupportNew() {
@@ -193,9 +208,28 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         layout_state_new_session.visibility = View.VISIBLE
     }
 
+    private fun setupNewChatSession() {
+        showSessionStateLive()
+        layout_chat.visibility = View.GONE
+        showLoadingOpeningMessage()
+
+        // get opening messages from server
+        db.collection(COLLECTION_ROOT_OPENING_MESSAGES).orderBy("id", Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    sendOpeningMessage(
+                        document.getString("message")!!,
+                        document.getString("auto_text")!!
+                    )
+                }
+            }
+    }
+
     private fun setupChatSnapshotListener() {
+        layout_chat.visibility = View.VISIBLE
         val collectionReference =
-            rootQuery.document(chatRoomName!!).collection(chatSessionCollection)
+            rootQuery.document(chatRoomName!!).collection(COLLECTION_ROOT_ROOM_CHAT)
                 .orderBy(CHAT_DOC_FIELD_NAME_TIME_SENT, Query.Direction.ASCENDING)
 
         chatListSnapshotListener =
@@ -232,10 +266,12 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                     updateUserStatus(true)
                     roomFieldFirstUserId = snapshot.getString(ROOM_DOC_FIELD_NAME_FIRST_USER_ID)
                     roomFieldFirstUserName = snapshot.getString(ROOM_DOC_FIELD_NAME_FIRST_USER_NAME)
-                    roomFieldIsNewChatAvailable = snapshot.getBoolean(ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE)!!
+                    roomFieldIsNewChatAvailable =
+                        snapshot.getBoolean(ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE)!!
                     roomFieldLastChat = snapshot.getString(ROOM_DOC_FIELD_NAME_LAST_CHAT)
                     roomFieldSecondUserId = snapshot.getString(ROOM_DOC_FIELD_NAME_SECOND_USER_ID)
-                    roomFieldSecondUserName = snapshot.getString(ROOM_DOC_FIELD_NAME_SECOND_USER_NAME)
+                    roomFieldSecondUserName =
+                        snapshot.getString(ROOM_DOC_FIELD_NAME_SECOND_USER_NAME)
 
                     if (isNewSession) {
                         setupChatSnapshotListener()
@@ -247,7 +283,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                     if (roomFieldSecondUserId != null && !roomFieldSecondUserId.equals("")) {
                         showCustomerSupportData(roomFieldSecondUserId)
                     } else {
-                        showCustomerSupportLoading()
+//                        showCustomerSupportLoading()
                     }
                 } else {
                     Log.d(TAG, "$source data: null")
@@ -267,23 +303,26 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
     private fun populateChatList(documents: List<DocumentSnapshot>) {
         chatList.clear()
+
         for (i in documents.indices) {
             // check if sender id match current user id
             // to identify chat type (outgoing or incoming)
             var chatType: Int
             val senderId = documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_ID)
             val currentUserId = senderUserId
-            chatType = if (senderId.equals(currentUserId)) {
+            chatType = if (senderId == currentUserId) {
                 PERSONAL_CHAT_TYPE_OUTGOING
             } else {
                 PERSONAL_CHAT_TYPE_INCOMING
             }
+
 
             val chat = Chat(
                 chatType,
                 documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_ID),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_SENDER_NAME),
                 documents[i].getString(CHAT_DOC_FIELD_NAME_CHAT_BODY),
+                documents[i].getBoolean(CHAT_DOC_FIELD_NAME_AUTO_GENERATED)!!,
                 documents[i].getTimestamp(CHAT_DOC_FIELD_NAME_TIME_SENT)
             )
             chatList.add(chat)
@@ -292,8 +331,14 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         rv_chat.smoothScrollToPosition(chatList.size - 1)
     }
 
-    private fun proceedSendMessage(){
+    private fun proceedSendMessage() {
         if (et_chat_message.text.isNotBlank()) {
+            showSessionStateLive()
+            if (roomFieldSecondUserId != null && !roomFieldSecondUserId.equals("")) {
+                showCustomerSupportData(roomFieldSecondUserId)
+            } else {
+//                showCustomerSupportLoading()
+            }
             val message = et_chat_message.text.toString()
             et_chat_message.setText("")
             setNewMessageLocally(message)
@@ -307,6 +352,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             senderUserId,
             senderUserName,
             message,
+            false,
             null
         )
         chatList.add(chat)
@@ -320,6 +366,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             senderUserId,
             senderUserName,
             message,
+            false,
             null
         )
 
@@ -343,10 +390,11 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                 ROOM_DOC_FIELD_NAME_LAST_CHAT to chatSnippet,
                 ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE to true,
                 ROOM_DOC_FIELD_NAME_SESSION_START_AT to FieldValue.serverTimestamp(),
-                ROOM_DOC_FIELD_NAME_SESSION_END_AT to null
+                ROOM_DOC_FIELD_NAME_SESSION_END_AT to null,
+                ROOM_DOC_FIELD_LAST_CHAT_SENDER_ID to firstUserId
             )
 
-            db.collection(COLLECTION_ROOT_CHAT)
+            db.collection(COLLECTION_ROOT_ROOM)
                 .document(chatRoomName!!)
                 .set(room)
                 .addOnSuccessListener {
@@ -360,10 +408,11 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                 ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE to true,
                 ROOM_DOC_FIELD_NAME_LAST_UPDATE to FieldValue.serverTimestamp(),
                 ROOM_DOC_FIELD_NAME_LAST_CHAT to chatSnippet,
-                ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE to true
+                ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE to true,
+                ROOM_DOC_FIELD_LAST_CHAT_SENDER_ID to firstUserId
             )
 
-            db.collection(COLLECTION_ROOT_CHAT)
+            db.collection(COLLECTION_ROOT_ROOM)
                 .document(chatRoomName!!)
                 .update(room)
                 .addOnSuccessListener {
@@ -377,17 +426,11 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     }
 
     private fun addNewChat(chat: Chat, isNew: Boolean) {
-        val docRef = db.collection(COLLECTION_ROOT_CHAT).document(chatRoomName!!)
+        val docRef = db.collection(COLLECTION_ROOT_ROOM).document(chatRoomName!!)
         docRef.get()
-            .addOnSuccessListener { document ->
-                val calendar1 = Calendar.getInstance()
-                calendar1.timeInMillis =
-                    document.getTimestamp(ROOM_DOC_FIELD_NAME_SESSION_START_AT)!!.seconds * 1000L
-                val date = DateFormat.format("ddMMyyyyHHmmss", calendar1).toString()
-                Log.d(TAG, "session start at: $date")
-
-                docRef.collection(chatSessionCollection)
-                    .add(chat.toMap()!!)
+            .addOnSuccessListener {
+                docRef.collection(COLLECTION_ROOT_ROOM_CHAT)
+                    .add(chat.toMap())
                     .addOnSuccessListener {
                         // what happen if new chat insertion succeeded
                         if (isNew) {
@@ -403,12 +446,91 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             }
     }
 
+    private fun sendOpeningMessage(message: String, autoText: String) {
+        val chat = Chat(
+            null,
+            "opening-message",
+            autoText,
+            message,
+            true,
+            null
+        )
+
+        chatSnippet = message
+        if (chatSnippet!!.length > CHAT_SNIPPET_LENGTH) {
+            chatSnippet = chatSnippet!!.substring(0, CHAT_SNIPPET_LENGTH)
+            chatSnippet = chatSnippet.plus("...")
+        }
+
+        val room: HashMap<String, Any?>?
+
+        if (isNewSession) {
+            room = hashMapOf(
+                ROOM_DOC_FIELD_NAME_SECOND_USER_ID to secondUserId,
+                ROOM_DOC_FIELD_NAME_SECOND_USER_NAME to secondUserName,
+                ROOM_DOC_FIELD_NAME_FIRST_USER_ID to firstUserId,
+                ROOM_DOC_FIELD_NAME_FIRST_USER_NAME to firstUserName,
+                ROOM_DOC_FIELD_NAME_SESSION_STATUS to true,
+                ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE to true,
+                ROOM_DOC_FIELD_NAME_LAST_UPDATE to FieldValue.serverTimestamp(),
+                ROOM_DOC_FIELD_NAME_LAST_CHAT to chatSnippet,
+                ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE to true,
+                ROOM_DOC_FIELD_NAME_SESSION_START_AT to FieldValue.serverTimestamp(),
+                ROOM_DOC_FIELD_NAME_SESSION_END_AT to null,
+                ROOM_DOC_FIELD_LAST_CHAT_SENDER_ID to firstUserId
+            )
+
+            db.collection(COLLECTION_ROOT_ROOM)
+                .document(chatRoomName!!)
+                .set(room)
+                .addOnSuccessListener {
+                    // add new chat
+                    addNewChat(chat, true)
+                }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+        } else {
+            room = hashMapOf(
+                ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE to true,
+                ROOM_DOC_FIELD_NAME_LAST_UPDATE to FieldValue.serverTimestamp(),
+                ROOM_DOC_FIELD_NAME_LAST_CHAT to chatSnippet,
+                ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE to true,
+                ROOM_DOC_FIELD_LAST_CHAT_SENDER_ID to firstUserId
+            )
+
+            db.collection(COLLECTION_ROOT_ROOM)
+                .document(chatRoomName!!)
+                .update(room)
+                .addOnSuccessListener {
+                    addNewChat(chat, false)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error writing document", e)
+                }
+        }
+
+    }
+
+    private fun showLoadingOpeningMessage(){
+        val chat = Chat(
+            PERSONAL_CHAT_TYPE_INCOMING_LOADING,
+            "",
+            "",
+            "",
+            false,
+            null
+        )
+
+        chatList.add(chat)
+        chatListAdapter.notifyDataSetChanged()
+    }
+
     private fun updateUserStatus(isOnline: Boolean) {
         val room = hashMapOf(
             ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE to isOnline
         )
 
-        db.collection(COLLECTION_ROOT_CHAT)
+        db.collection(COLLECTION_ROOT_ROOM)
             .document(chatRoomName!!)
             .update(room as Map<String, Any>)
             .addOnSuccessListener {

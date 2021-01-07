@@ -50,6 +50,7 @@
     <dimen name="size_icon_xxlm">180dp</dimen>
     <dimen name="size_icon_xxll">200dp</dimen>
     <dimen name="size_icon_xxlll">213dp</dimen>
+    <dimen name="size_icon_xxllm">250dp</dimen>
     <dimen name="size_icon_xxxl">350dp</dimen>
     <dimen name="size_icon_xxxll">450dp</dimen>
     <dimen name="size_height_adv">150dp</dimen>
