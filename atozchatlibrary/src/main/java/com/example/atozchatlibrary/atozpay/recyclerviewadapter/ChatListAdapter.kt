@@ -18,6 +18,8 @@ class ChatListAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var isLastItemVisible = false
+
     companion object {
         const val ITEM_TYPE_OUTGOING = 1
         const val ITEM_TYPE_INCOMING = 2
@@ -77,6 +79,8 @@ class ChatListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val chat = chatList[position]
+
+        isLastItemVisible = position == chatList.size - 1
 
         when (chat.type) {
             ITEM_TYPE_INCOMING -> {
@@ -157,4 +161,6 @@ class ChatListAdapter(
             tvInfoMsg.text = chat.body
         }
     }
+
+
 }

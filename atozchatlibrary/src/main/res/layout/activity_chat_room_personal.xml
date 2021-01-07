@@ -197,7 +197,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="@dimen/margin_xxl"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/layout_chat"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
@@ -312,19 +312,15 @@
         android:id="@+id/layout_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="@dimen/margin_sm"
+            android:layout_marginRight="@dimen/margin_sm"
+            android:layout_marginBottom="@dimen/margin_sm"
             android:background="@drawable/background_chat_edittext"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/button_send"
@@ -337,6 +333,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/ic_baseline_emoji_emotions_24"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -344,15 +341,13 @@
                 android:id="@+id/et_chat_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:background="@color/transparent"
-                android:digits="qwertyuiopasdfghjklzxcvbnm 1234567890 QWERTYUIOPASDFGHJKLZXCVBNM ,.?"
                 android:hint="Tulis Pesan"
                 android:imeOptions="normal"
+                android:minHeight="@dimen/size_icon_sms"
+                android:paddingLeft="@dimen/margin_l"
                 android:paddingTop="10dp"
-                android:paddingEnd="15dp"
-                android:paddingRight="15dp"
+                android:paddingRight="@dimen/margin_l"
                 android:paddingBottom="10dp"
                 android:text=""
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -367,19 +362,46 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/ic_baseline_attach_file_24"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:src="@drawable/ic_baseline_send_36"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:layout_marginRight="@dimen/margin_sm"
+            android:layout_marginBottom="@dimen/margin_sm"
+            android:background="@drawable/bg_action_button_start_chat_session"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/button_send_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/margin_l"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/size_icon_sss"
+                    android:layout_height="@dimen/size_icon_sss"
+                    android:src="@drawable/ic_baseline_send_36"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

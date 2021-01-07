@@ -17,9 +17,9 @@ import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DO
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_SENDER_NAME
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_DOC_FIELD_NAME_TIME_SENT
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.CHAT_SNIPPET_LENGTH
-import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_ROOM
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_CS
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_OPENING_MESSAGES
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_ROOM
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.COLLECTION_ROOT_ROOM_CHAT
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.PERSONAL_CHAT_TYPE_INCOMING
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.PERSONAL_CHAT_TYPE_INCOMING_LOADING
@@ -88,7 +88,19 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             adapter = chatListAdapter
         }
 
-        button_send.setOnClickListener {
+        rv_chat.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+           if (chatListAdapter.isLastItemVisible){
+               if (bottom < oldBottom) {
+                   rv_chat.postDelayed(Runnable {
+                       rv_chat.smoothScrollToPosition(
+                           chatList.size - 1
+                       )
+                   }, 10)
+               }
+           }
+        }
+
+        button_send_action.setOnClickListener {
             proceedSendMessage()
         }
 
@@ -328,7 +340,12 @@ class CustomerSupportChatActivity : AppCompatActivity() {
             chatList.add(chat)
         }
         chatListAdapter.notifyDataSetChanged()
-        rv_chat.smoothScrollToPosition(chatList.size - 1)
+
+        rv_chat.postDelayed(Runnable {
+            rv_chat.smoothScrollToPosition(
+                chatList.size - 1
+            )
+        }, 50)
     }
 
     private fun proceedSendMessage() {
@@ -511,7 +528,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
     }
 
-    private fun showLoadingOpeningMessage(){
+    private fun showLoadingOpeningMessage() {
         val chat = Chat(
             PERSONAL_CHAT_TYPE_INCOMING_LOADING,
             "",
