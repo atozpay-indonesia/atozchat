@@ -137,6 +137,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     private fun setupDocumentReference() {
         senderUserId = intent.getStringExtra(INTENT_NAME_SENDER_USER_ID)
         senderUserName = intent.getStringExtra(INTENT_NAME_SENDER_USER_NAME)
+        tv_session_title.text = intent.getStringExtra(INTENT_NAME_ACTIVITY_TITLE)
         firstUserId = senderUserId
         firstUserName = senderUserName
         chatRoomName = "$senderUserId"

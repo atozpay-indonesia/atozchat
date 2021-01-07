@@ -19,6 +19,7 @@ class RoomListAdapter(private val roomList: List<ChatRoom>, private val context:
 
             parentLayout.setOnClickListener {
                 AtozChat.initChatAtozpay(context)
+                    .setActivityTitle("Customer Support Chat")
                     .setSenderUserId(room.senderId!!.toString())
                     .setSenderUserName(room.senderName)
                     .startChat()

@@ -13,9 +13,14 @@ public class AtozChat {
     @SuppressLint("StaticFieldLeak")
     static AtozChat atozChat;
     Context mContext;
-
+    String activityTitle;
     String personalSenderUserId;
     String personalSenderUserName;
+
+    /**
+     * Intent Extra for activity/session title
+     */
+    public static final String INTENT_NAME_ACTIVITY_TITLE = "ACTIVITY_TITLE";
 
     /**
      * Intent Extra for sender user id
@@ -44,6 +49,10 @@ public class AtozChat {
         return atozChat;
     }
 
+    public AtozChat setActivityTitle(String title) {
+        activityTitle = title;
+        return atozChat;
+    }
 
     public AtozChat setSenderUserId(String senderId){
         personalSenderUserId = senderId;
@@ -57,6 +66,7 @@ public class AtozChat {
 
     public void startChat(){
         Intent i = new Intent(mContext, CustomerSupportChatActivity.class);
+        i.putExtra(INTENT_NAME_ACTIVITY_TITLE, activityTitle);
         i.putExtra(INTENT_NAME_SENDER_USER_ID, personalSenderUserId);
         i.putExtra(INTENT_NAME_SENDER_USER_NAME, personalSenderUserName);
         mContext.startActivity(i);
