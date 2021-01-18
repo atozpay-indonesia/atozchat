@@ -198,7 +198,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="@dimen/margin_xxl"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/layout_chat"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
@@ -209,10 +209,23 @@
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@drawable/img_start_chat_session"
-            app:layout_constraintBottom_toTopOf="@id/layout_start_session"
+            app:layout_constraintBottom_toTopOf="@id/tv_start_session_label"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_start_session_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tekan tombol Mulai Percakapan untuk memulai sesi chat"
+            android:textSize="@dimen/text_XL"
+            app:layout_constraintBottom_toTopOf="@id/layout_start_session"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_start_new_session"
+            app:layout_constraintVertical_bias="0.31" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_start_session"
@@ -222,7 +235,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_start_new_session">
+            app:layout_constraintTop_toBottomOf="@id/tv_start_session_label">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_action_start_session"
@@ -267,7 +280,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -275,7 +287,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="@dimen/margin_xxl"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/layout_chat"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
@@ -288,7 +300,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@drawable/img_start_chat_session"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_end_session_label"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -300,12 +312,64 @@
             android:gravity="center"
             android:text="Sesi chat ini telah berakhir. \n Kirim pesan untuk memulai sesi chat"
             android:textSize="@dimen/text_XL"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout_restart_session"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_end_session"
             app:layout_constraintVertical_bias="0.31" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_restart_session"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_action_button_start_chat_session"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_end_session_label">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_action_restart_session"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:paddingLeft="@dimen/margin_xxl"
+                android:paddingTop="@dimen/margin_s"
+                android:paddingRight="@dimen/margin_xxl"
+                android:paddingBottom="@dimen/margin_m"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_restart_new_session"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/margin_m"
+                    android:gravity="center"
+                    android:text="Mulai percakapan"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="@dimen/text_L"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/iv_restart_session"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_restart_session"
+                    android:layout_width="@dimen/size_icon_ss"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_s"
+                    android:src="@drawable/ic_baseline_send_36"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

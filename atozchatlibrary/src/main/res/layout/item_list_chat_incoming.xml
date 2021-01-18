@@ -62,11 +62,13 @@
             android:id="@+id/tv_auto_generated_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="auto generated"
             android:textSize="@dimen/text_s"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_main_bubble"/>
+            app:layout_constraintTop_toBottomOf="@id/layout_main_bubble" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
