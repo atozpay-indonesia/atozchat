@@ -3,6 +3,7 @@ package com.example.atozchatlibrary.atozpay.activities
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,7 @@ import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.PERSONA
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_LAST_CHAT_SENDER_ID
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_FIRST_USER_ID
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_FIRST_USER_NAME
+import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_FIRST_USER_TOKEN
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_LAST_CHAT
@@ -36,8 +38,10 @@ import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DO
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_SESSION_END_AT
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_SESSION_START_AT
 import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DOC_FIELD_NAME_SESSION_STATUS
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_chat_room_personal.*
 import java.util.*
 
@@ -45,6 +49,7 @@ import java.util.*
 class CustomerSupportChatActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var rootQuery: CollectionReference
+    private var token: String? = null
     private val chatList: MutableList<Chat> = ArrayList()
     private val chatListAdapter = ChatListAdapter(chatList, this)
     private var chatRoomName: String? = null
@@ -111,6 +116,8 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         layout_action_start_session.setOnClickListener {
             setupNewChatSession()
         }
+
+        generateFirebaseToken(false)
     }
 
     override fun onResume() {
@@ -125,6 +132,27 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         super.onPause()
         updateUserStatus(false)
         detachSnapshotListener()
+    }
+
+    private fun generateFirebaseToken(isSessionStarting: Boolean) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            token = task.result
+
+            // Log and toast
+//            val msg = getString(R.string.msg_token_fmt, token)
+            Log.d(TAG, token)
+            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
+
+            if (isSessionStarting){
+                setupNewChatSession()
+            }
+        })
     }
 
     private fun detachSnapshotListener() {
@@ -222,21 +250,25 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     }
 
     private fun setupNewChatSession() {
-        showSessionStateLive()
-        layout_chat.visibility = View.GONE
-        showLoadingOpeningMessage()
+        if (token.isNullOrEmpty()){
+            generateFirebaseToken(true)
+        } else {
+            showSessionStateLive()
+            layout_chat.visibility = View.GONE
+            showLoadingOpeningMessage()
 
-        // get opening messages from server
-        db.collection(COLLECTION_ROOT_OPENING_MESSAGES).orderBy("id", Query.Direction.ASCENDING)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    sendOpeningMessage(
-                        document.getString("message")!!,
-                        document.getString("auto_text")!!
-                    )
+            // get opening messages from server
+            db.collection(COLLECTION_ROOT_OPENING_MESSAGES).orderBy("id", Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        sendOpeningMessage(
+                            document.getString("message")!!,
+                            document.getString("auto_text")!!
+                        )
+                    }
                 }
-            }
+        }
     }
 
     private fun setupChatSnapshotListener() {
@@ -488,6 +520,7 @@ class CustomerSupportChatActivity : AppCompatActivity() {
                 ROOM_DOC_FIELD_NAME_SECOND_USER_NAME to secondUserName,
                 ROOM_DOC_FIELD_NAME_FIRST_USER_ID to firstUserId,
                 ROOM_DOC_FIELD_NAME_FIRST_USER_NAME to firstUserName,
+                ROOM_DOC_FIELD_NAME_FIRST_USER_TOKEN to token,
                 ROOM_DOC_FIELD_NAME_SESSION_STATUS to true,
                 ROOM_DOC_FIELD_NAME_IS_NEW_CHAT_AVAILABLE to true,
                 ROOM_DOC_FIELD_NAME_LAST_UPDATE to FieldValue.serverTimestamp(),

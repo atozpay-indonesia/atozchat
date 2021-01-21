@@ -14,6 +14,7 @@ class Constants {
         const val COLLECTION_ROOT_CS = "web-app-panel-user"
         const val ROOM_DOC_FIELD_NAME_FIRST_USER_ID = "first_user_id"
         const val ROOM_DOC_FIELD_NAME_FIRST_USER_NAME = "first_user_name"
+        const val ROOM_DOC_FIELD_NAME_FIRST_USER_TOKEN = "first_user_token"
         const val ROOM_DOC_FIELD_NAME_SECOND_USER_ID = "second_user_id"
         const val ROOM_DOC_FIELD_NAME_SECOND_USER_NAME = "second_user_name"
         const val ROOM_DOC_FIELD_NAME_IS_CUSTOMER_ONLINE = "is_customer_online"
