@@ -1,18 +1,23 @@
 package com.example.atozchat
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.activeandroid.query.Select
 import com.example.atozchatlibrary.AtozChat
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private var token: String? = null
     private val roomList: MutableList<ChatRoom> = ArrayList()
-    private val roomListAdapter = RoomListAdapter(roomList, this)
+    private val roomListAdapter = RoomListAdapter(roomList, this, token)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +28,7 @@ class MainActivity : AppCompatActivity() {
             adapter = roomListAdapter
         }
 
-        saveDummyList()
-        loadRoom()
+        generateFirebaseToken()
     }
 
     private fun saveDummyList() {
@@ -102,5 +106,25 @@ class MainActivity : AppCompatActivity() {
 
         roomList.addAll(rooms)
         roomListAdapter.notifyDataSetChanged()
+    }
+
+    private fun generateFirebaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(AtozChat.TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            token = task.result
+
+            // Log and toast
+//            val msg = getString(R.string.msg_token_fmt, token)
+            Log.d(AtozChat.TAG, token)
+            Toast.makeText(this, token, Toast.LENGTH_SHORT).show()
+
+            saveDummyList()
+            loadRoom()
+        })
     }
 }

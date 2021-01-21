@@ -41,7 +41,6 @@ import com.example.atozchatlibrary.atozpay.utilities.Constants.Companion.ROOM_DO
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_chat_room_personal.*
 import java.util.*
 
@@ -94,15 +93,15 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         }
 
         rv_chat.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-           if (chatListAdapter.isLastItemVisible){
-               if (bottom < oldBottom) {
-                   rv_chat.postDelayed(Runnable {
-                       rv_chat.smoothScrollToPosition(
-                           chatList.size - 1
-                       )
-                   }, 10)
-               }
-           }
+            if (chatListAdapter.isLastItemVisible) {
+                if (bottom < oldBottom) {
+                    rv_chat.postDelayed(Runnable {
+                        rv_chat.smoothScrollToPosition(
+                            chatList.size - 1
+                        )
+                    }, 10)
+                }
+            }
         }
 
         button_send_action.setOnClickListener {
@@ -116,8 +115,6 @@ class CustomerSupportChatActivity : AppCompatActivity() {
         layout_action_start_session.setOnClickListener {
             setupNewChatSession()
         }
-
-        generateFirebaseToken(false)
     }
 
     override fun onResume() {
@@ -130,29 +127,10 @@ class CustomerSupportChatActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        updateUserStatus(false)
-        detachSnapshotListener()
-    }
-
-    private fun generateFirebaseToken(isSessionStarting: Boolean) {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            token = task.result
-
-            // Log and toast
-//            val msg = getString(R.string.msg_token_fmt, token)
-            Log.d(TAG, token)
-            Toast.makeText(baseContext, token, Toast.LENGTH_SHORT).show()
-
-            if (isSessionStarting){
-                setupNewChatSession()
-            }
-        })
+        if (!token.isNullOrEmpty()) {
+            updateUserStatus(false)
+            detachSnapshotListener()
+        }
     }
 
     private fun detachSnapshotListener() {
@@ -165,6 +143,10 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     private fun setupDocumentReference() {
         senderUserId = intent.getStringExtra(INTENT_NAME_SENDER_USER_ID)
         senderUserName = intent.getStringExtra(INTENT_NAME_SENDER_USER_NAME)
+        token = intent.getStringExtra(INTENT_NAME_SENDER_FCM_TOKEN)
+        if (token.isNullOrEmpty()) {
+            onBackPressed()
+        }
         tv_session_title.text = intent.getStringExtra(INTENT_NAME_ACTIVITY_TITLE)
         firstUserId = senderUserId
         firstUserName = senderUserName
@@ -250,25 +232,21 @@ class CustomerSupportChatActivity : AppCompatActivity() {
     }
 
     private fun setupNewChatSession() {
-        if (token.isNullOrEmpty()){
-            generateFirebaseToken(true)
-        } else {
-            showSessionStateLive()
-            layout_chat.visibility = View.GONE
-            showLoadingOpeningMessage()
+        showSessionStateLive()
+        layout_chat.visibility = View.GONE
+        showLoadingOpeningMessage()
 
-            // get opening messages from server
-            db.collection(COLLECTION_ROOT_OPENING_MESSAGES).orderBy("id", Query.Direction.ASCENDING)
-                .get()
-                .addOnSuccessListener { documents ->
-                    for (document in documents) {
-                        sendOpeningMessage(
-                            document.getString("message")!!,
-                            document.getString("auto_text")!!
-                        )
-                    }
+        // get opening messages from server
+        db.collection(COLLECTION_ROOT_OPENING_MESSAGES).orderBy("id", Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    sendOpeningMessage(
+                        document.getString("message")!!,
+                        document.getString("auto_text")!!
+                    )
                 }
-        }
+            }
     }
 
     private fun setupChatSnapshotListener() {
